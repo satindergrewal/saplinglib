@@ -1,3 +1,5 @@
+Cargo.lock
+libsaplinglib.a
+
 # Unneeded system files
 .DS_Store
-Cargo.lock
