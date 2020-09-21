@@ -32,17 +32,17 @@ darwin:
 
 win64:
 	@mkdir -p dist/win64
-	rustup target add x86_64-pc-windows-msvc
-	cargo build --target=x86_64-pc-windows-msvc --release
-	@cp -av target/x86_64-pc-windows-msvc/release/saplinglib.lib dist/win64/
+	rustup target add x86_64-pc-windows-gnu
+	cargo build --target=x86_64-pc-windows-gnu --release
+	@cp -av target/x86_64-pc-windows-gnu/release/libsaplinglib.a dist/win64/
 	@rm -rf target
 	@rm -rf Cargo.lock
 
 linux64:
 	@mkdir -p dist/linux
-	rustup target add x86_64-unknown-linux-musl
-	cargo build --target=x86_64-unknown-linux-musl --release
-	@cp -av target/x86_64-unknown-linux-musl/release/libsaplinglib.a dist/linux/
+	rustup target add x86_64-unknown-linux-gnu
+	cargo build --target=x86_64-unknown-linux-gnu --release
+	@cp -av target/x86_64-unknown-linux-gnu/release/libsaplinglib.a dist/linux/
 	@rm -rf target
 	@rm -rf Cargo.lock
 

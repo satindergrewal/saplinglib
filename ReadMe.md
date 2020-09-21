@@ -104,6 +104,14 @@ It will generate a binary named `csapling` which if you execute will give the fo
 ]
 ```
 
+#### Cross-compiling C example code
+
+Windows
+
+```shell
+x86_64-w64-mingw32-gcc ./src/C/main.c -I./src -L./target/x86_64-pc-windows-gnu/release -lsaplinglib -lws2_32 -luserenv -o main.exe
+```
+
 
 ### Go Language Example Code
 
@@ -116,8 +124,6 @@ Save the following contents in `gosapling.go` file:
 package main
 
 /*
-#cgo CFLAGS: -I./src
-#cgo LDFLAGS: -L./ -lsaplinglib -lpthread -ldl -framework Security
 #include "saplinglib.h"
 #include <stdlib.h>
 #include <string.h>
@@ -145,8 +151,10 @@ func main() {
 
 Assuming you saved the `gosapling.go` in the same directory where the library file `libsaplinglib.a` is located, compile it using the following command:
 
+NOTE: You have to specify `CGO_CFLAGS` and `CGO_LDFLAGS` values to include the header `saplinglib.h` and `libsaplinglib.a` file to call functions from static library files.
+
 ```shell
-go build -o gosapling gosapling.go
+env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/ -lsaplinglib -framework Security" go build -o gosapling gosapling.go
 ```
 
 It will generate a binary named `gosapling` which if you execute will give the following output:
@@ -165,4 +173,19 @@ It will generate a binary named `gosapling` which if you execute will give the f
     }
   }
 ]
+```
+
+#### Cross-compiling Go example code
+
+OSX:
+
+```shell
+env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin/ -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build
+```
+
+Windows:
+There must be extra parameter provided `CC` to specifiy which gcc binary to use to compile windows binary.
+
+```shell
+env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build
 ```
