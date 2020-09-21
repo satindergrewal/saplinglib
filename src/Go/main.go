@@ -33,7 +33,10 @@ func main() {
 // Compile using this command:
 
 // OSX:
-// env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin/ -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build
+// env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build
 
 // Windows:
 // env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/win64 -lsaplinglib -lws2_32 -luserenv" CC="x86_64-w64-mingw32-gcc" CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build
+
+// Linux:
+// env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/linux -lsaplinglib -lpthread -ldl -lm" CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build
