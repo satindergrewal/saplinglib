@@ -82,7 +82,7 @@ fn gen_addresses_with_seed_as_json<F>(zcount: u32, mut get_seed: F) -> String
 fn get_address(seed: &[u8], index: u32) -> (String, String, json::JsonValue) {
     let addr_prefix : &str = "zs";
     let pk_prefix   : &str = "secret-extended-key-main";
-    let cointype           = {133};
+    let cointype           = {141};
     
     let spk: ExtendedSpendingKey = ExtendedSpendingKey::from_path(
             &ExtendedSpendingKey::master(seed),
