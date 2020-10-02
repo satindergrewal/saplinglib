@@ -62,22 +62,24 @@ Save the following contents in `csapling.c` file:
 #include "saplinglib.h"
 
 int main() {
-  // rust_generate_wallet function takes four parameters
-  // 1) nohd:             set it to false, if you don't want HD wallet
-  // 2) zcount:           the number of sapling addresses you want to generate
-  // 3) seed:             the user specified passphrase, which gives the same address everytime if given the same passphrase
-  // 4) is_iguana_seed:   set this to true if you want the output to always give a deterministic address based on user specified seed phrase
-  bool nohd = false;
-  int zcount = 1;
-  char *seed = "user specified seed phrase";
-  bool is_iguana_seed = true;
+	// rust_generate_wallet function takes four parameters
+	// 1) nohd:				set it to false, if you don't want HD wallet
+	// 2) zcount:			the number of sapling addresses you want to generate
+	// 3) seed:				the user specified passphrase, which gives the same address everytime if given the same passphrase
+	// 4) is_iguana_seed:	set this to true if you want the output to always give a deterministic address based on user specified seed phrase
+	// 5) coinType:			cointype is picked from src/chainparam.cpp file of the cryptocurrency. Example, zcash uses 133 for mainnet, 1 for testnet, and komodo uses 141 for mainnet
+	bool nohd = false;
+	int zcount = 1;
+	char *seed = "user specified seed phrase";
+	bool is_iguana_seed = true;
+	int cointype = 141;
 
-  char * from_rust = rust_generate_wallet(nohd, zcount, seed, is_iguana_seed);
-  char *stri = from_rust;
-  printf("%s", stri);
-  rust_free_string(from_rust);
+	char * from_rust = rust_generate_wallet(nohd, zcount, seed, is_iguana_seed, cointype);
+	char *stri = from_rust;
+	printf("%s", stri);
+	rust_free_string(from_rust);
 
-  return 0;
+	return 0;
 }
 ```
 
@@ -94,11 +96,11 @@ It will generate a binary named `csapling` which if you execute will give the fo
 [
   {
     "num": 0,
-    "address": "zs1z6tqgxd5fekfya07rhg6p5amwfwkmh3xwp8dcfvwqy8x4vvq0sg473d0lmgz4qevm2l4zzkhfrv",
-    "private_key": "secret-extended-key-main1qwteh95uqqqqpqzv60m0kuuwrp2l0me3784kzctd6c3cfnsaflc4nw87p3huh8rp5cxy3kvuv453vsswsgfcf6kpj36az8t5qtt2u0lm2rf2auusny7qzvnxc9hn46erwzrkz9xhnk222qs7grye4qc4ulgh079xcvmmlcczpe9h4rg0385u4jfx2kutfxpx8jvjqlyf8u866c2n0j9sfc956nlwl07qy3a50vd2h6tdg2fsu5gksh25m46r7akwdxfcvc7f28mvx7s8ch3cp",
+    "address": "zs10znh5fxagl4z2efdy2rltgas9aahjscjuj3slsjyk96zfn5s8vu3sz6u8s4jkyl9zswp2ucm68j",
+    "private_key": "secret-extended-key-main1q0eaejzrqqqqpqpl5kj9676vn6dx4ul0s8vc2xhqu3g2f22r8494l0sjkega75nvhupyasuxrfyj2usr2g8ru2uv4y8d88g3xtrhg0jvcuzgy50wp3dsdnfs3nxjaj2qvpswg93x0e5sety25d6ktcgzkc7ntxq9rg60mfcq9fh8gp97h8aw8ccvn74z68tps6d43ukww4f55k6rhm2322sc02ugq7tur0e9kpj34tevyeej4h38dfz6ktj4thtv3alg0eydkm4rrlssautyr",
     "seed": {
       "HDSeed": "fe50eb2add6c3e1ecc550f901fa737cbebab7b7a1dbf6827d4b0fd3521d2f93e",
-      "path": "m/32'/133'/0'"
+      "path": "m/32'/141'/0'"
     }
   }
 ]
@@ -137,15 +139,22 @@ import (
 )
 
 func main() {
-  nohd := C.bool(false)
-  zcount := C.uint(1)
-  seed := C.CString("user specified seed phrase")
-  isIguanaSeed := C.bool(true)
+	// rust_generate_wallet function takes four parameters
+	// 1) nohd:				set it to false, if you don't want HD wallet
+	// 2) zcount:			the number of sapling addresses you want to generate
+	// 3) seed:				the user specified passphrase, which gives the same address everytime if given the same passphrase
+	// 4) isIguanaSeed:		set this to true if you want the output to always give a deterministic address based on user specified seed phrase
+	// 5) coinType:			cointype is picked from src/chainparam.cpp file of the cryptocurrency. Example, zcash uses 133 for mainnet, 1 for testnet, and komodo uses 141 for mainnet
+	nohd := C.bool(false)
+	zcount := C.uint(1)
+	seed := C.CString("user specified seed phrase")
+	isIguanaSeed := C.bool(true)
+	coinType := C.uint(141)
 
-  fromRust := C.CString("")
-  defer C.free(unsafe.Pointer(fromRust))
-  fromRust = C.rust_generate_wallet(nohd, zcount, seed, isIguanaSeed)
-  fmt.Println(C.GoString(fromRust))
+	fromRust := C.CString("")
+	defer C.free(unsafe.Pointer(fromRust))
+	fromRust = C.rust_generate_wallet(nohd, zcount, seed, isIguanaSeed, coinType)
+	fmt.Println(C.GoString(fromRust))
 }
 ```
 
@@ -165,11 +174,11 @@ It will generate a binary named `gosapling` which if you execute will give the f
 [
   {
     "num": 0,
-    "address": "zs1z6tqgxd5fekfya07rhg6p5amwfwkmh3xwp8dcfvwqy8x4vvq0sg473d0lmgz4qevm2l4zzkhfrv",
-    "private_key": "secret-extended-key-main1qwteh95uqqqqpqzv60m0kuuwrp2l0me3784kzctd6c3cfnsaflc4nw87p3huh8rp5cxy3kvuv453vsswsgfcf6kpj36az8t5qtt2u0lm2rf2auusny7qzvnxc9hn46erwzrkz9xhnk222qs7grye4qc4ulgh079xcvmmlcczpe9h4rg0385u4jfx2kutfxpx8jvjqlyf8u866c2n0j9sfc956nlwl07qy3a50vd2h6tdg2fsu5gksh25m46r7akwdxfcvc7f28mvx7s8ch3cp",
+    "address": "zs10znh5fxagl4z2efdy2rltgas9aahjscjuj3slsjyk96zfn5s8vu3sz6u8s4jkyl9zswp2ucm68j",
+    "private_key": "secret-extended-key-main1q0eaejzrqqqqpqpl5kj9676vn6dx4ul0s8vc2xhqu3g2f22r8494l0sjkega75nvhupyasuxrfyj2usr2g8ru2uv4y8d88g3xtrhg0jvcuzgy50wp3dsdnfs3nxjaj2qvpswg93x0e5sety25d6ktcgzkc7ntxq9rg60mfcq9fh8gp97h8aw8ccvn74z68tps6d43ukww4f55k6rhm2322sc02ugq7tur0e9kpj34tevyeej4h38dfz6ktj4thtv3alg0eydkm4rrlssautyr",
     "seed": {
       "HDSeed": "fe50eb2add6c3e1ecc550f901fa737cbebab7b7a1dbf6827d4b0fd3521d2f93e",
-      "path": "m/32'/133'/0'"
+      "path": "m/32'/141'/0'"
     }
   }
 ]

@@ -19,14 +19,16 @@ func main() {
 	// 2) zcount:			the number of sapling addresses you want to generate
 	// 3) seed:				the user specified passphrase, which gives the same address everytime if given the same passphrase
 	// 4) isIguanaSeed:		set this to true if you want the output to always give a deterministic address based on user specified seed phrase
+	// 5) coinType:			cointype is picked from src/chainparam.cpp file of the cryptocurrency. Example, zcash uses 133 for mainnet, 1 for testnet, and komodo uses 141 for mainnet
 	nohd := C.bool(false)
 	zcount := C.uint(1)
 	seed := C.CString("user specified seed phrase")
 	isIguanaSeed := C.bool(true)
+	coinType := C.uint(141)
 
 	fromRust := C.CString("")
 	defer C.free(unsafe.Pointer(fromRust))
-	fromRust = C.rust_generate_wallet(nohd, zcount, seed, isIguanaSeed)
+	fromRust = C.rust_generate_wallet(nohd, zcount, seed, isIguanaSeed, coinType)
 	fmt.Println(C.GoString(fromRust))
 }
 

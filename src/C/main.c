@@ -9,12 +9,14 @@ int main() {
 	// 2) zcount:			the number of sapling addresses you want to generate
 	// 3) seed:				the user specified passphrase, which gives the same address everytime if given the same passphrase
 	// 4) is_iguana_seed:	set this to true if you want the output to always give a deterministic address based on user specified seed phrase
+	// 5) coinType:			cointype is picked from src/chainparam.cpp file of the cryptocurrency. Example, zcash uses 133 for mainnet, 1 for testnet, and komodo uses 141 for mainnet
 	bool nohd = false;
 	int zcount = 1;
 	char *seed = "user specified seed phrase";
 	bool is_iguana_seed = true;
+	int cointype = 141;
 
-	char * from_rust = rust_generate_wallet(nohd, zcount, seed, is_iguana_seed);
+	char * from_rust = rust_generate_wallet(nohd, zcount, seed, is_iguana_seed, cointype);
 	char *stri = from_rust;
 	printf("%s", stri);
 	rust_free_string(from_rust);

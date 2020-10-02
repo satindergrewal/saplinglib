@@ -8,7 +8,7 @@ use blake2_rfc::blake2b::Blake2b;
 /**
  * Generate a series of `zcount` addresses and private keys. 
  */
-pub fn generate_wallet(nohd: bool, zcount: u32, user_entropy: &[u8], is_iguana_seed: bool) -> String {        
+pub fn generate_wallet(nohd: bool, zcount: u32, user_entropy: &[u8], is_iguana_seed: bool, cointype: u32) -> String {        
     // Get 32 bytes of system entropy
     let mut system_entropy:[u8; 32] = [0; 32]; 
     {
@@ -36,10 +36,10 @@ pub fn generate_wallet(nohd: bool, zcount: u32, user_entropy: &[u8], is_iguana_s
         let mut seed: [u8; 32] = [0; 32];
         rng.fill(&mut seed);
         
-        return gen_addresses_with_seed_as_json(zcount, |i| (seed.to_vec(), i));
+        return gen_addresses_with_seed_as_json(zcount, cointype, |i| (seed.to_vec(), i));
     } else {
         // Not using HD addresses, so derive a new seed every time    
-        return gen_addresses_with_seed_as_json(zcount, |_| {            
+        return gen_addresses_with_seed_as_json(zcount, cointype, |_| {            
             let mut seed:[u8; 32] = [0; 32]; 
             rng.fill(&mut seed);
             
@@ -59,14 +59,14 @@ pub fn generate_wallet(nohd: bool, zcount: u32, user_entropy: &[u8], is_iguana_s
  *
  * It is useful if we want to reuse (or not) the seed across multiple wallets.
  */
-fn gen_addresses_with_seed_as_json<F>(zcount: u32, mut get_seed: F) -> String 
+fn gen_addresses_with_seed_as_json<F>(zcount: u32, cointype: u32, mut get_seed: F) -> String 
     where F: FnMut(u32) -> (Vec<u8>, u32)
 {
     let mut ans = array![];
 
     for i in 0..zcount {
         let (seed, child) = get_seed(i);
-        let (addr, pk, path) = get_address(&seed, child);
+        let (addr, pk, path) = get_address(&seed, child, cointype);
         ans.push(object!{
                 "num"           => i,
                 "address"       => addr,
@@ -79,22 +79,22 @@ fn gen_addresses_with_seed_as_json<F>(zcount: u32, mut get_seed: F) -> String
 }
 
 // Generate a standard ZIP-32 address from the given seed at 32'/44'/0'/index
-fn get_address(seed: &[u8], index: u32) -> (String, String, json::JsonValue) {
+fn get_address(seed: &[u8], index: u32, cointype: u32) -> (String, String, json::JsonValue) {
     let addr_prefix : &str = "zs";
     let pk_prefix   : &str = "secret-extended-key-main";
-    let cointype           = {141};
+    let _cointype           = {cointype};
     
     let spk: ExtendedSpendingKey = ExtendedSpendingKey::from_path(
             &ExtendedSpendingKey::master(seed),
             &[
                 ChildIndex::Hardened(32),
-                ChildIndex::Hardened(cointype),
+                ChildIndex::Hardened(_cointype),
                 ChildIndex::Hardened(index)
             ],
         );
     let path = object!{
         "HDSeed"    => hex::encode(seed),
-        "path"      => format!("m/32'/{}'/{}'", cointype, index)
+        "path"      => format!("m/32'/{}'/{}'", _cointype, index)
     };
 
     let (_d, addr) = spk.default_address().expect("Cannot get result");
