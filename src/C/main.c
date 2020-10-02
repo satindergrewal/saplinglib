@@ -21,3 +21,33 @@ int main() {
 
 	return 0;
 }
+
+// From root directory of saplinglib execute this command:
+
+// LINUX:
+// 
+// git clone https://github.com/satindergrewal/saplinglib
+// cd saplinglib
+// curl https://sh.rustup.rs -sSf | sh
+// source $HOME/.cargo/env
+// cargo build --target=x86_64-unknown-linux-gnu --release
+// gcc ./src/C/main.c -I./src -L./target/x86_64-unknown-linux-gnu/release -lsaplinglib -lpthread -ldl -lm -o main
+
+// CROSS-COMPILING FOR WINDOWS USING MINGW:
+//
+// git clone https://github.com/satindergrewal/saplinglib
+// cd saplinglib
+// curl https://sh.rustup.rs -sSf | sh
+// source $HOME/.cargo/env
+// rustup target add x86_64-pc-windows-gnu
+// cargo build --target=x86_64-pc-windows-gnu --release
+// x86_64-w64-mingw32-gcc ./src/C/main.c -I./src -L./target/x86_64-pc-windows-gnu/release -lsaplinglib -lws2_32 -luserenv -o main.exe
+
+// MacOS:
+//
+// git clone https://github.com/satindergrewal/saplinglib
+// cd saplinglib
+// curl https://sh.rustup.rs -sSf | sh
+// source $HOME/.cargo/env
+// cargo build --target=x86_64-apple-darwin --release
+// gcc ./src/C/main.c -I./src -L./target/x86_64-apple-darwin/release -lsaplinglib -framework Security -o main
