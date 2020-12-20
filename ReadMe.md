@@ -39,12 +39,15 @@ It will compile and copy the static libraries for Windows, Linux and MacOS to a 
 ```shell
 ➜  dist git:(master) ✗ tree
 .
-├── darwin
-│   └── libsaplinglib.a
-├── linux
-│   └── libsaplinglib.a
-└── win64
-    └── saplinglib.lib
+├── dist
+│   ├── darwin
+│   │   └── libsaplinglib.a
+│   ├── darwin_arm64
+│   │   └── libsaplinglib.a
+│   ├── linux
+│   │   └── libsaplinglib.a
+│   └── win64
+│       └── libsaplinglib.a
 
 3 directories, 3 files
 ```
@@ -186,10 +189,16 @@ It will generate a binary named `gosapling` which if you execute will give the f
 
 #### Cross-compiling Go example code
 
-OSX:
+macOS x86_64:
 
 ```shell
 env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin/ -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build
+```
+
+macOS arm64:
+
+```shell
+env CGO_CFLAGS="-I$HOME/go/src/github.com/satindergrewal/saplinglib/src/" CGO_LDFLAGS="-L$HOME/go/src/github.com/satindergrewal/saplinglib/dist/darwin_arm64/ -lsaplinglib -framework Security" CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build
 ```
 
 Windows:

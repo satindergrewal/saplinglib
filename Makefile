@@ -1,6 +1,6 @@
 all: build
 
-dist: darwin win64 linux64
+dist: darwin darwin_arm64 win64 linux64
 
 build: src/lib.rs Cargo.toml
 	cargo build --lib --release
@@ -9,7 +9,7 @@ build: src/lib.rs Cargo.toml
 
 # Test binaries using static library file
 cbin: build
-	gcc src/C/main.c -L./ -lsaplinglib -lpthread -ldl -o csapling -framework Security
+	gcc src/C/main.c -I./src -L./ -lsaplinglib -lpthread -ldl -o csapling -framework Security
 	./csapling
 	@rm -rf target
 	@rm -rf Cargo.lock
@@ -20,13 +20,20 @@ gobin: build
 	@rm -rf target
 	@rm -rf Cargo.lock
 
-
 # Distributable release libraries
 darwin:
 	@mkdir -p dist/darwin
 	rustup target add x86_64-apple-darwin
 	cargo build --target=x86_64-apple-darwin --release
 	@cp -av target/x86_64-apple-darwin/release/libsaplinglib.a dist/darwin/
+	@rm -rf target
+	@rm -rf Cargo.lock
+
+darwin_arm64:
+	@mkdir -p dist/darwin_arm64
+	rustup target add aarch64-apple-darwin
+	cargo build --target=aarch64-apple-darwin --release
+	@cp -av target/aarch64-apple-darwin/release/libsaplinglib.a dist/darwin_arm64/
 	@rm -rf target
 	@rm -rf Cargo.lock
 

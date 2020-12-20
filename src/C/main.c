@@ -45,7 +45,7 @@ int main() {
 // cargo build --target=x86_64-pc-windows-gnu --release
 // x86_64-w64-mingw32-gcc ./src/C/main.c -I./src -L./target/x86_64-pc-windows-gnu/release -lsaplinglib -lws2_32 -luserenv -o main.exe
 
-// MacOS:
+// macOS x86_64:
 //
 // git clone https://github.com/satindergrewal/saplinglib
 // cd saplinglib
@@ -53,3 +53,12 @@ int main() {
 // source $HOME/.cargo/env
 // cargo build --target=x86_64-apple-darwin --release
 // gcc ./src/C/main.c -I./src -L./target/x86_64-apple-darwin/release -lsaplinglib -framework Security -o main
+
+// macOS arm64:
+//
+// git clone https://github.com/satindergrewal/saplinglib
+// cd saplinglib
+// curl https://sh.rustup.rs -sSf | sh
+// source $HOME/.cargo/env
+// cargo build --target=aarch64-apple-darwin --release
+// gcc ./src/C/main.c -I./src -L./target/aarch64-apple-darwin/release -lsaplinglib -framework Security -o main
